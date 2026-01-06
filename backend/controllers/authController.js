@@ -1,7 +1,10 @@
 import User from "../models/User.js";
-import { storeRefreshToken } from "../services/tokenService.js";
+import {
+  deleteRefreshToken,
+  storeRefreshToken,
+} from "../services/redisService.js";
 import { setCookies } from "../utils/cookie.js";
-import { generateTokens } from "../utils/token.js";
+import { generateTokens, verifyRefreshToken } from "../utils/token.js";
 
 export const signup = async (req, res) => {
   try {
@@ -29,7 +32,24 @@ export const signup = async (req, res) => {
       message: "User created successfully",
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+export const signout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (refreshToken) {
+      const { userId } = verifyRefreshToken(refreshToken);
+      await deleteRefreshToken(userId);
+    }
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    res.status(200).json({
+      message: "Logged out successfully",
+    });
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };

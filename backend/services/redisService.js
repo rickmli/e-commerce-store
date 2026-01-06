@@ -2,9 +2,13 @@ import { redis } from "../libs/redis.js";
 
 export const storeRefreshToken = async (userId, refreshToken) => {
   await redis.set(
-    `refresh_token: ${userId}`,
+    `refresh_token:${userId}`,
     refreshToken,
     "EX",
     7 * 24 * 60 * 60
   );
+};
+
+export const deleteRefreshToken = async (userId) => {
+  await redis.del(`refresh_token:${userId}`);
 };

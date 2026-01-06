@@ -14,3 +14,7 @@ export const generateTokens = (userId) => {
 
   return { accessToken, refreshToken };
 };
+
+export const verifyRefreshToken = (token) => {
+  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+};
