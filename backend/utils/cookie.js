@@ -2,18 +2,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const setCookies = (res, accessToken, refreshToken) => {
-  res.cookie("accessToken", accessToken, {
+export const setCookie = (res, name, payload, maxAge = 15 * 60) => {
+  res.cookie(name, payload, {
     httpOnly: true, // prevent XSS attacks, cannot be accessed by js
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", // prevents CSRF attack, cross-site request forgery atttack
-    maxAge: 15 * 60 * 1000, // 15 minutes
-  });
-
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true, // prevent XSS attacks, cannot be accessed by js
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict", // prevents CSRF attack, cross-site request forgery atttack
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: maxAge * 1000, // 15 minutes
   });
 };

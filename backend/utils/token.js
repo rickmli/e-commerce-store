@@ -3,16 +3,28 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
+const tokenConfig = {
+  access: {
+    secret: process.env.ACCESS_TOKEN_SECRET,
     expiresIn: "15m",
-  });
-
-  const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
+  },
+  refresh: {
+    secret: process.env.REFRESH_TOKEN_SECRET,
     expiresIn: "7d",
-  });
+  },
+};
 
-  return { accessToken, refreshToken };
+export const generateToken = (tokenType, userId) => {
+  const config = tokenConfig[tokenType];
+  if (!config) {
+    throw new Error(
+      `Invalid token type: ${tokenType}. Use 'access' or 'refresh'.`
+    );
+  }
+
+  return jwt.sign({ userId }, config.secret, {
+    expiresIn: config.expiresIn,
+  });
 };
 
 export const verifyRefreshToken = (token) => {

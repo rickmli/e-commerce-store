@@ -9,6 +9,16 @@ export const storeRefreshToken = async (userId, refreshToken) => {
   );
 };
 
+export const getRefreshToken = async (userId) => {
+  const token = await redis.get(`refresh_token:${userId}`);
+
+  if (!token) {
+    throw new Error(`Refresh token not found for user ${userId}`);
+  }
+
+  return token;
+};
+
 export const deleteRefreshToken = async (userId) => {
   await redis.del(`refresh_token:${userId}`);
 };
