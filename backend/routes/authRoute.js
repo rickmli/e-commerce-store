@@ -6,13 +6,14 @@ import {
   refreshAccessToken,
   getProfile,
 } from "../controllers/authController.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
 const router = express();
 
-router.post("/signup", signup);
-router.post("/signout", signout);
-router.post("/signin", signin);
-router.post("/refresh-access-token", refreshAccessToken);
+router.post("/signup", asyncHandler(signup));
+router.post("/signout", asyncHandler(signout));
+router.post("/signin", asyncHandler(signin));
+router.post("/refresh-access-token", asyncHandler(refreshAccessToken));
 
 // todo implement protectRoute
 // router.get("/profile", protectRoute, getProfile)

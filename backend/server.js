@@ -19,12 +19,17 @@ const PORT = process.env.PORT || 5002;
 app.use(express.json()); // allows you to parse the body of the request
 app.use(cookieParser());
 
+import errorHandler from "./middlewares/errorHandler.js";
+
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 // app.use("/api/cart", cartRoutes);
 // app.use("/api/coupons", couponRoutes);
 // app.use("/api/payments", paymentRoutes);
 // app.use("/api/analytics", analyticsRoutes);
+
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 // if (process.env.NODE_ENV === "production") {
 // 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
@@ -34,7 +39,16 @@ app.use("/api/products", productRoutes);
 // 	});
 // }
 
-app.listen(PORT, () => {
-  console.log("Server is running on http://localhost:" + PORT);
-  connectDB();
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log("Server is running on http://localhost:" + PORT);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
