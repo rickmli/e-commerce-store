@@ -11,7 +11,7 @@ import {
 
 const router = express();
 
-router.get("/", protectRoute, getCartItems);
+router.get("/", protectRoute, asyncHandler(getCartItems));
 router.post("/:id", protectRoute, asyncHandler(addToCart));
 router.delete("/:id", protectRoute, asyncHandler(removeFromCart));
 router.delete("/", protectRoute, asyncHandler(removeAllFromCart));

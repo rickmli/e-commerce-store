@@ -1,8 +1,18 @@
 import Product from "../models/Product.js";
 
-export const getCartItems = (req, res) => {
+export const getCartItems = async (req, res) => {
   const user = req.user;
-  res.json(user.cartItems);
+  const products = await Product.find({ _id: { $in: user.cartItems } });
+
+  // add quantity for each product
+  const cartItems = products.map((product) => {
+    const item = user.cartItems.find(
+      (cartItem) => cartItem.product.id === product.id
+    );
+    return { ...product.toJSON(), quantity: item.product.quantity };
+  });
+
+  res.status(200).json(cartItems);
 };
 
 export const addToCart = async (req, res) => {
