@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/authRoute.js";
 import productRoutes from "./routes/productRoute.js";
-// import cartRoutes from "./routes/cart.route.js";
+import cartRoutes from "./routes/cartRoute.js";
 // import couponRoutes from "./routes/coupon.route.js";
 // import paymentRoutes from "./routes/payment.route.js";
 // import analyticsRoutes from "./routes/analytics.route.js";
@@ -23,7 +23,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
-// app.use("/api/cart", cartRoutes);
+app.use("/api/cart", cartRoutes);
 // app.use("/api/coupons", couponRoutes);
 // app.use("/api/payments", paymentRoutes);
 // app.use("/api/analytics", analyticsRoutes);

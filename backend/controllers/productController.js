@@ -98,7 +98,7 @@ export const deleteProduct = async (req, res) => {
 
   await Product.findByIdAndDelete(productId);
 
-  res.status(200).json({ message: "Product deleted successfully" });
+  res.status(204).send();
 };
 
 export const getProductsByCategory = async (req, res) => {
@@ -123,12 +123,6 @@ export const toggleFeaturedProduct = async (req, res) => {
 };
 
 async function updateFeaturedProductsCache() {
-  try {
-    // The lean() method  is used to return plain JavaScript objects instead of full Mongoose documents. This can significantly improve performance
-
-    const featuredProducts = await Product.find({ isFeatured: true }).lean();
-    await storeFeaturedProductsToRedis(JSON.stringify(featuredProducts));
-  } catch (error) {
-    console.log("error in update cache function");
-  }
+  const featuredProducts = await Product.find({ isFeatured: true }).lean();
+  await storeFeaturedProductsToRedis(JSON.stringify(featuredProducts));
 }
