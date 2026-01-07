@@ -1,5 +1,5 @@
+import "./utils/dotenv.js";
 import express from "express";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 // import path from "path";
 
@@ -11,8 +11,6 @@ import productRoutes from "./routes/productRoute.js";
 // import analyticsRoutes from "./routes/analytics.route.js";
 
 import { connectDB } from "./libs/db.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5002;

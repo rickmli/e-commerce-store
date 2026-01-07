@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 export const setCookie = (res, name, payload, maxAge = 15 * 60) => {
   res.cookie(name, payload, {
     httpOnly: true, // prevent XSS attacks, cannot be accessed by js
