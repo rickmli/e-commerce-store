@@ -1,11 +1,11 @@
 import User from "../models/User.js";
 import {
-  deleteRefreshToken,
-  getRefreshToken,
-  storeRefreshToken,
+  deleteRefreshTokenFromRedis,
+  getRefreshTokenFromRedis,
+  storeRefreshTokenToRedis,
 } from "../services/redisService.js";
 import { setCookie } from "../utils/cookie.js";
-import { generateToken, verifyRefreshToken } from "../utils/token.js";
+import { generateToken, verifyToken } from "../utils/token.js";
 
 export const signup = async (req, res) => {
   try {
@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
     // authenticate
     const accessToken = generateToken("access", newUser._id);
     const refreshToken = generateToken("refresh", newUser._id);
-    await storeRefreshToken(newUser._id, refreshToken);
+    await storeRefreshTokenToRedis(newUser._id, refreshToken);
 
     setCookie(res, "accessToken", accessToken, 15 * 60);
     setCookie(res, "refreshToken", refreshToken, 7 * 24 * 60 * 60);
@@ -40,8 +40,8 @@ export const signout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
-      const { userId } = verifyRefreshToken(refreshToken);
-      await deleteRefreshToken(userId);
+      const { userId } = verifyToken("refresh", refreshToken);
+      await deleteRefreshTokenFromRedis(userId);
     }
 
     res.clearCookie("accessToken");
@@ -72,7 +72,7 @@ export const signin = async (req, res) => {
 
     const accessToken = generateToken("access", user._id);
     const refreshToken = generateToken("refresh", user._id);
-    await storeRefreshToken(user._id, refreshToken);
+    await storeRefreshTokenToRedis(user._id, refreshToken);
 
     setCookie(res, "accessToken", accessToken, 15 * 60);
     setCookie(res, "refreshToken", refreshToken, 7 * 24 * 60 * 60);
@@ -97,8 +97,8 @@ export const refreshAccessToken = async (req, res) => {
       return res.status(401).json({ message: "Refresh token not provided" });
     }
 
-    const { userId } = verifyRefreshToken(refreshToken);
-    const storedToken = await getRefreshToken(userId);
+    const { userId } = verifyToken("refresh", refreshToken);
+    const storedToken = await getRefreshTokenFromRedis(userId);
 
     if (storedToken !== refreshToken) {
       return res.status(401).json({ message: "Refresh token invalid" });

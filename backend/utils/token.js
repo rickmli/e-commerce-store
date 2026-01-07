@@ -27,6 +27,13 @@ export const generateToken = (tokenType, userId) => {
   });
 };
 
-export const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+export const verifyToken = (tokenType, token) => {
+  const config = tokenConfig[tokenType];
+  if (!config) {
+    throw new Error(
+      `Invalid token type: ${tokenType}. Use 'access' or 'refresh'.`
+    );
+  }
+
+  return jwt.verify(token, config.secret);
 };
