@@ -7,7 +7,7 @@ import authRoutes from "./routes/authRoute.js";
 import productRoutes from "./routes/productRoute.js";
 import cartRoutes from "./routes/cartRoute.js";
 import couponRoutes from "./routes/couponRoute.js";
-// import paymentRoutes from "./routes/payment.route.js";
+import paymentRoutes from "./routes/paymentRoute.js";
 // import analyticsRoutes from "./routes/analytics.route.js";
 
 import { connectDB } from "./libs/db.js";
@@ -25,7 +25,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponRoutes);
-// app.use("/api/payments", paymentRoutes);
+app.use("/api/payments", paymentRoutes);
 // app.use("/api/analytics", analyticsRoutes);
 
 // Error handling middleware (must be last)
