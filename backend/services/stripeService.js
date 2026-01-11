@@ -1,4 +1,4 @@
-import { stripe } from "../libs/stripe";
+import { stripe } from "../libs/stripe.js";
 
 export const createStripeCoupon = async (discountPercentage) => {
   const coupon = await stripe.coupons.create({
