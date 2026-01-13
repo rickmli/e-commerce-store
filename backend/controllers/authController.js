@@ -109,6 +109,6 @@ export const refreshAccessToken = async (req, res) => {
   res.json({ message: "Token refreshed successfully" });
 };
 
-export const getProfile = async (req, res) => {
+export const getProfile = (req, res) => {
   res.json(req.user);
 };
