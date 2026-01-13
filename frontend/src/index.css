@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@layer components {
+  .btn-nav-transition {
+    @apply transition duration-300 ease-in-out;
+  }
+
+  .btn-nav-normal {
+    @apply text-gray-300 hover:text-emerald-400;
+  }
+
+  /* .btn-nav-filled {
+    @apply;
+  } */
+}
