@@ -1,4 +1,4 @@
-function SignupInput({
+function AuthFormInput({
   value,
   onChange,
   type,
@@ -31,4 +31,4 @@ function SignupInput({
   );
 }
 
-export default SignupInput;
+export default AuthFormInput;
