@@ -4,21 +4,19 @@ import { Mail, Lock } from "lucide-react";
 import AuthFormInput from "../components/AuthFormInput";
 import SignupOption from "../ui/SignupOption";
 import AuthFormSubmit from "../components/AuthFormSubmit";
-// import { useUserStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
 
-const LoginPage = () => {
+const SigninPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // const { login, loading } = useUserStore();
-  const loading = false;
+  const { signin, loading } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData.email, formData.password);
-    // login(email, password);
+    signin(formData.email, formData.password);
   };
 
   const handleChange = (e, fieldName) =>
@@ -76,4 +74,4 @@ const LoginPage = () => {
     </div>
   );
 };
-export default LoginPage;
+export default SigninPage;

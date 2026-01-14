@@ -1,4 +1,5 @@
 import express from "express";
+import { protectRoute } from "../middlewares/authMiddleware.js";
 import {
   signup,
   signout,
@@ -14,8 +15,6 @@ router.post("/signup", asyncHandler(signup));
 router.post("/signout", asyncHandler(signout));
 router.post("/signin", asyncHandler(signin));
 router.post("/refresh-access-token", asyncHandler(refreshAccessToken));
-
-// todo implement protectRoute
-// router.get("/profile", protectRoute, getProfile)
+router.get("/profile", protectRoute, getProfile);
 
 export default router;

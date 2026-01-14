@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import Navbar from "./Navbar";
 import BackgroundGradient from "../ui/BackgroundGradient";
+import { Toaster } from "react-hot-toast";
 
 function Layout() {
   return (
@@ -11,6 +12,7 @@ function Layout() {
         <Navbar />
         <Outlet />
       </div>
+      <Toaster />
     </div>
   );
 }

@@ -6,7 +6,6 @@ import {
 } from "../services/redisService.js";
 import { setCookie } from "../utils/cookie.js";
 import { generateToken, verifyToken } from "../utils/token.js";
-import asyncHandler from "../utils/asyncHandler.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;

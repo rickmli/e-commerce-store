@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import AuthFormInput from "../components/AuthFormInput";
 import SignupOption from "../ui/SignupOption";
 import AuthFormSubmit from "../components/AuthFormSubmit";
-// import { useUserStore } from "../stores/useUserStore";
+import { useUserStore } from "../stores/useUserStore";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -14,13 +14,12 @@ const SignupPage = () => {
     confirmPassword: "",
   });
 
-  // const { signup, loading } = useUserStore();
-  const loading = false;
+  const { signup, loading } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // signup(formData);
-    console.log(formData);
+    signup(formData);
+    // console.log(formData);
   };
 
   const handleChange = (e, fieldName) =>
