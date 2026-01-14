@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import axios from "../libs/axios";
 import { toast } from "react-hot-toast";
+import { hasCookie } from "../utils/cookie";
 
 export const useUserStore = create((set, get) => ({
   user: null,
   loading: false,
-  checkingAuth: true,
+  checkingAuth: false,
 
   signup: async ({ name, email, password, confirmPassword }) => {
     set({ loading: true });
@@ -55,6 +56,8 @@ export const useUserStore = create((set, get) => ({
   },
 
   checkAuth: async () => {
+    if (!hasCookie("accessToken")) return;
+
     set({ checkingAuth: true });
     try {
       const response = await axios.get("/auth/profile");
@@ -73,7 +76,7 @@ export const useUserStore = create((set, get) => ({
 
     set({ checkingAuth: true });
     try {
-      const response = await axios.post("/auth/refresh-token");
+      const response = await axios.post("/auth/refresh-access-token");
       return response.data;
     } catch (error) {
       set({ user: null });
