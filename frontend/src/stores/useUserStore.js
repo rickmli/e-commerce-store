@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import axios from "../libs/axios";
 import { toast } from "react-hot-toast";
-import { hasCookie } from "../utils/cookie";
 
 export const useUserStore = create((set, get) => ({
   user: null,
@@ -42,6 +41,7 @@ export const useUserStore = create((set, get) => ({
   },
 
   signout: async () => {
+    set({ loading: true });
     try {
       await axios.post("/auth/signout");
       set({ user: null });
@@ -51,13 +51,12 @@ export const useUserStore = create((set, get) => ({
         error.response?.data?.message || "An error occurred during signout"
       );
     } finally {
+      set({ loading: false });
       console.log(get("user"));
     }
   },
 
   checkAuth: async () => {
-    if (!hasCookie("accessToken")) return;
-
     set({ checkingAuth: true });
     try {
       const response = await axios.get("/auth/profile");

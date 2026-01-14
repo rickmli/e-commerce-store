@@ -47,7 +47,7 @@ const Navbar = () => {
             {isAdmin && (
               <Link
                 className="bg-emerald-700 hover:bg-emerald-600 text-white px-3 py-1 rounded-md font-medium btn-nav-transition"
-                to={"/secret-dashboard"}
+                to={"/admin-dashboard"}
               >
                 <Lock className="inline-block mr-1" size={18} />
                 <span className="hidden sm:inline">Dashboard</span>

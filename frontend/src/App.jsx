@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
 
 import { useUserStore } from "./stores/useUserStore";
@@ -10,15 +10,22 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 import Layout from "./components/Layout";
 import LoadingSpinner from "./ui/LoadingSpinner";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
+  const [authChecked, setAuthChecked] = useState(false);
+  const isAdmin = user?.role === "admin";
 
   useEffect(() => {
-    checkAuth();
+    const initAuth = async () => {
+      await checkAuth();
+      setAuthChecked(true); // Fix admin dashboard refresh: Added state flag to force re-render after auth check, ensuring user role is properly evaluated for route guards.
+    };
+    initAuth();
   }, [checkAuth]);
 
-  if (checkingAuth) return <LoadingSpinner />;
+  if (checkingAuth || !authChecked) return <LoadingSpinner />;
 
   return (
     <Routes>
@@ -31,6 +38,12 @@ function App() {
         <Route
           path="/signin"
           element={!user ? <SigninPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin-dashboard"
+          element={isAdmin ? <AdminPage /> : <Navigate to="/" />}
+          // todo if not checked before
+          // element={<AdminPage />}
         />
         <Route path="/*" element={<NotFoundPage />} />
       </Route>
