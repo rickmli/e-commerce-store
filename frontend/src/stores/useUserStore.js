@@ -17,6 +17,7 @@ export const useUserStore = create((set, get) => ({
     try {
       const res = await axios.post("/auth/signup", { name, email, password });
       set({ user: res.data });
+      toast.success("User created successfully");
     } catch (error) {
       toast.error(error.response.data.message || "An error occurred");
     } finally {
@@ -30,6 +31,7 @@ export const useUserStore = create((set, get) => ({
     try {
       const res = await axios.post("/auth/signin", { email, password });
       set({ user: res.data });
+      toast.success("Signed in successfully");
     } catch (error) {
       toast.error(error.response.data.message || "An error occurred");
     } finally {
@@ -42,6 +44,7 @@ export const useUserStore = create((set, get) => ({
     try {
       await axios.post("/auth/signout");
       set({ user: null });
+      toast.success("Signed out successfully");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "An error occurred during signout"
