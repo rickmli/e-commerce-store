@@ -13,7 +13,6 @@ const tokenConfig = {
 
 export const generateToken = (tokenType, userId) => {
   const config = tokenConfig[tokenType];
-  console.log(config);
   if (!config) {
     throw new Error(
       `Invalid token type: ${tokenType}. Use 'access' or 'refresh'.`

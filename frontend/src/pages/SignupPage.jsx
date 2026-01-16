@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User, UserPlus } from "lucide-react";
 import { motion } from "framer-motion";
 import AuthFormInput from "../components/AuthFormInput";
 import SignupOption from "../ui/SignupOption";
-import AuthFormSubmit from "../components/AuthFormSubmit";
+import FormSubmitButton from "../components/FormSubmitButton";
 import { useUserStore } from "../stores/useUserStore";
 
 const SignupPage = () => {
@@ -90,7 +90,10 @@ const SignupPage = () => {
               <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </AuthFormInput>
 
-            <AuthFormSubmit isLoading={loading}>Sign Up</AuthFormSubmit>
+            <FormSubmitButton isLoading={loading}>
+              <UserPlus className="mr-2 h-5 w-5" aria-hidden="true" />
+              Sign Up
+            </FormSubmitButton>
           </form>
 
           <SignupOption />

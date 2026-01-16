@@ -7,7 +7,7 @@ import {
   refreshAccessToken,
   getProfile,
 } from "../controllers/authController.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/handler.js";
 
 const router = express();
 

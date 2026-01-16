@@ -1,6 +1,7 @@
 import { stripe } from "../libs/stripe.js";
+import { serviceErrorHandler } from "../utils/handler.js";
 
-export const createStripeCoupon = async (discountPercentage) => {
+export const _createStripeCoupon = async (discountPercentage) => {
   const coupon = await stripe.coupons.create({
     percent_off: discountPercentage,
     duration: "once",
@@ -9,7 +10,7 @@ export const createStripeCoupon = async (discountPercentage) => {
   return coupon.id;
 };
 
-export const createStripeSession = async (products, coupon, userId) => {
+export const _createStripeSession = async (products, coupon, userId) => {
   const lineItems = products.map((product) => {
     const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
     totalAmount += amount * product.quantity;
@@ -56,7 +57,23 @@ export const createStripeSession = async (products, coupon, userId) => {
   return session;
 };
 
-export const getStripeSession = async (sessionId) => {
+export const _getStripeSession = async (sessionId) => {
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   return session;
 };
+
+export const createStripeCoupon = serviceErrorHandler(
+  _createStripeCoupon,
+  "Stripe",
+  "Create Coupon"
+);
+export const createStripeSession = serviceErrorHandler(
+  _createStripeSession,
+  "Stripe",
+  "Create Session"
+);
+export const getStripeSession = serviceErrorHandler(
+  _getStripeSession,
+  "Stripe",
+  "Get Session"
+);

@@ -9,7 +9,7 @@ import {
   toggleFeaturedProduct,
 } from "../controllers/productController.js";
 import { adminRoute, protectRoute } from "../middlewares/authMiddleware.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/handler.js";
 
 const router = express();
 

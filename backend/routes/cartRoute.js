@@ -1,6 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middlewares/authMiddleware.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/handler.js";
 import {
   addToCart,
   getCartItems,

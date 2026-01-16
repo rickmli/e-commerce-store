@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, UserPlus } from "lucide-react";
 import AuthFormInput from "../components/AuthFormInput";
 import SignupOption from "../ui/SignupOption";
-import AuthFormSubmit from "../components/AuthFormSubmit";
+import FormSubmitButton from "../components/FormSubmitButton";
 import { useUserStore } from "../stores/useUserStore";
 
 const SigninPage = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: "admin@usc.edu",
+    password: "123123",
   });
 
   const { signin, loading } = useUserStore();
@@ -65,7 +65,10 @@ const SigninPage = () => {
               <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </AuthFormInput>
 
-            <AuthFormSubmit isLoading={loading}>Log In</AuthFormSubmit>
+            <FormSubmitButton isLoading={loading}>
+              <UserPlus className="mr-2 h-5 w-5" aria-hidden="true" />
+              Log In
+            </FormSubmitButton>
           </form>
 
           <SignupOption />
