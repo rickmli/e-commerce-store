@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 export const useCartStore = create((set, get) => ({
   cart: [],
   coupon: null,
+  availableCoupons: [],
   total: 0,
   subtotal: 0,
   isCouponApplied: false,
@@ -12,9 +13,9 @@ export const useCartStore = create((set, get) => ({
   getMyCoupon: async () => {
     try {
       const response = await axios.get("/coupons");
-      set({ coupon: response.data });
+      set({ availableCoupons: response.data });
     } catch (error) {
-      console.error("Error fetching coupon:", error);
+      console.error("Error fetching available coupons:", error);
     }
   },
   applyCoupon: async (code) => {

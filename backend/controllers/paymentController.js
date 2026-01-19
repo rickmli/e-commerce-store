@@ -4,7 +4,7 @@ import {
   createStripeSession,
   getStripeSession,
 } from "../services/stripeService.js";
-import { createNewCoupon } from "./couponController.js";
+import { createCoupon } from "./couponController.js";
 
 export const createCheckoutSession = async (req, res) => {
   const { products, couponCode } = req.body;
@@ -36,7 +36,7 @@ export const createCheckoutSession = async (req, res) => {
   const session = await createStripeSession(products, coupon, user._id);
 
   if (totalAmount >= 20000) {
-    await createNewCoupon(user._id);
+    await createCoupon(user._id);
   }
   res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
 };
