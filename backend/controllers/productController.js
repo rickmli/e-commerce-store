@@ -76,9 +76,9 @@ export const createProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
-  const { productId } = req.params;
+  const { id } = req.params;
 
-  const product = await Product.findById(productId);
+  const product = await Product.findById(id);
   if (!product) {
     const error = new Error("Product not found");
     error.status = 404;
@@ -95,7 +95,7 @@ export const deleteProduct = async (req, res) => {
     }
   }
 
-  await Product.findByIdAndDelete(productId);
+  await Product.findByIdAndDelete(id);
 
   res.status(204).send();
 };
@@ -107,8 +107,8 @@ export const getProductsByCategory = async (req, res) => {
 };
 
 export const toggleFeaturedProduct = async (req, res) => {
-  const { productId } = req.params;
-  const product = await Product.findById(productId);
+  const { id } = req.params;
+  const product = await Product.findById(id);
   if (product) {
     product.isFeatured = !product.isFeatured;
     const updatedProduct = await product.save();

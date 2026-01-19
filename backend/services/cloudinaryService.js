@@ -9,8 +9,9 @@ const _uploadImageToCloudinary = async (image, folderName) => {
   return result;
 };
 
-const _deleteImageFromCloudinary = async (publicId) => {
-  const result = await cloudinary.uploader.destroy(publicId);
+const _deleteImageFromCloudinary = async (image, folderName) => {
+  const publicId = image.split("/").pop().split(".")[0];
+  const result = await cloudinary.uploader.destroy(`${folderName}/${publicId}`);
   return result;
 };
 
