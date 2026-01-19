@@ -61,10 +61,8 @@ export const useProductStore = create((set, get) => ({
       set((prevState) => ({
         products: prevState.products.filter((product) => product._id !== id),
       }));
-      console.log(get("products"));
       toast.success("Product deleted successfully");
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message || "An error occurred");
     } finally {
       set({ loading: false });
@@ -82,10 +80,8 @@ export const useProductStore = create((set, get) => ({
             : { ...product, isFeatured: res.data.isFeatured }
         ),
       }));
-      console.log(get("products"));
       toast.success("Featurality toggled successfully");
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message || "An error occurred");
     } finally {
       set({ loading: false });
