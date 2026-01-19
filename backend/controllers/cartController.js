@@ -2,14 +2,20 @@ import Product from "../models/Product.js";
 
 export const getCartItems = async (req, res) => {
   const user = req.user;
-  const products = await Product.find({ _id: { $in: user.cartItems } });
+  const productIds = user.cartItems.map((item) => item.product); // productIds = ['696db917342f57850727e2c8', '696dbd98d44eab5ff46e8b87', ...]
+  const products = await Product.find({ _id: { $in: productIds } });
 
-  // add quantity for each product
   const cartItems = products.map((product) => {
-    const item = user.cartItems.find(
-      (cartItem) => cartItem.product.id === product.id
+    // 找到对应的购物车项
+    const cartItem = user.cartItems.find(
+      (item) => item.product.toString() === product._id.toString()
     );
-    return { ...product.toJSON(), quantity: item.product.quantity };
+
+    // 返回合并后的数据
+    return {
+      ...product.toJSON(),
+      quantity: cartItem ? cartItem.quantity : 1, // 防止找不到的情况
+    };
   });
 
   res.status(200).json(cartItems);

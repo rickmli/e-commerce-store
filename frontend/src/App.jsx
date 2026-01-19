@@ -12,9 +12,12 @@ import Layout from "./components/Layout";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
+import CartPage from "./pages/CartPage";
+import { useCartStore } from "./stores/useCartStore";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
+  const { getCartItems } = useCartStore();
   const [authChecked, setAuthChecked] = useState(false);
   const isAdmin = user?.role === "admin";
 
@@ -25,6 +28,12 @@ function App() {
     };
     initAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    getCartItems();
+  }, [user, getCartItems]);
 
   if (checkingAuth || !authChecked) return <LoadingSpinner />;
 
@@ -39,6 +48,11 @@ function App() {
         <Route
           path="/signin"
           element={!user ? <SigninPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/cart"
+          element={user ? <CartPage /> : <Navigate to="/" />}
+          // element={<CartPage />}
         />
         <Route path="/category/:category" element={<CategoryPage />} />
         <Route

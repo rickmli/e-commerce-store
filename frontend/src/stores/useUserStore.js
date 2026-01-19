@@ -89,6 +89,7 @@ export const useUserStore = create((set, get) => ({
 
 // Axios interceptor for token refresh
 let refreshPromise = null;
+const REFRESH_TIMEOUT = 10000; // 10秒超时
 
 axios.interceptors.response.use(
   (response) => response,
@@ -97,22 +98,38 @@ axios.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
+      // 清理函数
+      const cleanup = () => {
+        refreshPromise = null;
+      };
+
       try {
-        // If a refresh is already in progress, wait for it to complete
         if (refreshPromise) {
-          await refreshPromise;
+          await Promise.race([
+            refreshPromise,
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("刷新超时")), REFRESH_TIMEOUT)
+            ),
+          ]);
           return axios(originalRequest);
         }
 
-        // Start a new refresh process
-        refreshPromise = useUserStore.getState().refreshToken();
-        await refreshPromise;
-        refreshPromise = null;
+        // 设置超时自动清理
+        const timeoutId = setTimeout(cleanup, REFRESH_TIMEOUT);
+        refreshPromise = useUserStore
+          .getState()
+          .refreshToken()
+          .finally(() => {
+            clearTimeout(timeoutId);
+            cleanup();
+          });
 
+        await refreshPromise;
         return axios(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, redirect to login or handle as needed
+        cleanup();
         useUserStore.getState().signout();
+        window.location.href = "/login"; // 明确跳转登录页
         return Promise.reject(refreshError);
       }
     }
