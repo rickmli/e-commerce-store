@@ -83,7 +83,7 @@ export const useCartStore = create((set, get) => ({
       return;
     }
 
-    await axios.put(`/cart/${productId}`, { quantity });
+    await axios.patch(`/cart/${productId}`, { quantity });
     set((prevState) => ({
       cart: prevState.cart.map((item) =>
         item._id === productId ? { ...item, quantity } : item

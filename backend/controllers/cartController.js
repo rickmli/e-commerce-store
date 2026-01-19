@@ -75,7 +75,9 @@ export const updateQuantity = async (req, res) => {
     throw error;
   }
 
-  const cartItem = cartItems.find((item) => item.product.equals(productId));
+  const cartItem = user.cartItems.find((item) =>
+    item.product.equals(productId)
+  );
 
   if (cartItem.quantity === 0) {
     const updatedCartItems = user.cartItems.filter(
