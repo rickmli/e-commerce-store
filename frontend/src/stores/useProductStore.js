@@ -41,11 +41,23 @@ export const useProductStore = create((set, get) => ({
       set({ loading: false });
     }
   },
+  fetchProductsByCategory: async (category) => {
+    set({ loading: true });
+    try {
+      const res = await axios.get(`/products/category/${category}`);
+      set({ products: res.data });
+      // toast.success("Product retrieved successfully");
+    } catch (error) {
+      toast.error(error.response.data.message || "An error occurred");
+    } finally {
+      set({ loading: false });
+    }
+  },
 
   deleteProduct: async (id) => {
     set({ loading: true });
     try {
-      const res = await axios.delete(`/products/${id}`);
+      await axios.delete(`/products/${id}`);
       set((prevState) => ({
         products: prevState.products.filter((product) => product._id !== id),
       }));

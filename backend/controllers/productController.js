@@ -96,6 +96,7 @@ export const deleteProduct = async (req, res) => {
   }
 
   await Product.findByIdAndDelete(id);
+  await updateFeaturedProductsCache();
 
   res.status(204).send();
 };
@@ -103,7 +104,7 @@ export const deleteProduct = async (req, res) => {
 export const getProductsByCategory = async (req, res) => {
   const { category } = req.params;
   const products = await Product.find({ category });
-  res.json({ products });
+  res.json(products);
 };
 
 export const toggleFeaturedProduct = async (req, res) => {

@@ -11,6 +11,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Layout from "./components/Layout";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import AdminPage from "./pages/AdminPage";
+import CategoryPage from "./pages/CategoryPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -39,11 +40,10 @@ function App() {
           path="/signin"
           element={!user ? <SigninPage /> : <Navigate to="/" />}
         />
+        <Route path="/category/:category" element={<CategoryPage />} />
         <Route
           path="/admin-dashboard"
           element={isAdmin ? <AdminPage /> : <Navigate to="/" />}
-          // todo if not checked before
-          // element={<AdminPage />}
         />
         <Route path="/*" element={<NotFoundPage />} />
       </Route>
