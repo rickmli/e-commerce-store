@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router";
 import { useUserStore } from "./stores/useUserStore";
 
 import HomePage from "./pages/HomePage";
-import SignupPage from "./pages/SignUpPage";
+import SignupPage from "./pages/SignupPage";
 import SigninPage from "./pages/SigninPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
