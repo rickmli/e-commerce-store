@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { MoveRight } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "../libs/axios";
 
-const stripePromise = loadStripe(
-  "pk_test_51KZYccCoOZF2UhtOwdXQl3vcizup20zqKqT9hVUIsVzsdBrhqbUI2fE0ZdEVLdZfeHjeyFXtqaNsyCJCmZWnjNZa00PzMAjlcL"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const OrderSummary = () => {
   const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
+  const navigate = useNavigate();
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
@@ -25,13 +24,7 @@ const OrderSummary = () => {
     });
 
     const session = res.data;
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      console.error("Error:", result.error);
-    }
+    if (session) window.location.href = session.redirect_url;
   };
 
   return (
@@ -53,17 +46,6 @@ const OrderSummary = () => {
               ${formattedSubtotal}
             </dd>
           </dl>
-
-          {/* {savings > 0 && (
-            <dl className="flex items-center justify-between gap-4">
-              <dt className="text-base font-normal text-gray-300">
-                Coupon ({coupon.code})
-              </dt>
-              <dd className="text-base font-medium text-emerald-400">
-                -${formattedSavings}
-              </dd>
-            </dl>
-          )} */}
 
           {coupon && isCouponApplied && (
             <dl className="flex items-center justify-between gap-4">

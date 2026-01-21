@@ -4,9 +4,10 @@ import {
   createStripeSession,
   getStripeSession,
 } from "../services/stripeService.js";
-import { createCoupon } from "./couponController.js";
+import { createRewardCoupon } from "./couponController.js";
 
 export const createCheckoutSession = async (req, res) => {
+  console.log(process.env.CLIENT_URL);
   const { products, couponCode } = req.body;
   const user = req.user;
 
@@ -16,29 +17,17 @@ export const createCheckoutSession = async (req, res) => {
     throw error;
   }
 
-  let totalAmount = 0;
+  const session = await createStripeSession(products, couponCode, user._id);
 
-  let coupon = null;
-  if (couponCode) {
-    coupon = await Coupon.findOne({
-      code: couponCode,
-      userId: user._id,
-      isActive: true,
-    });
-    if (!coupon) {
-      const error = new Error("Coupon not found");
-      error.status = 404;
-      throw error;
-    }
-    totalAmount -= Math.round((totalAmount * coupon.discountPercentage) / 100);
+  if (session?.amount_total >= 200) {
+    await createRewardCoupon(user._id);
   }
 
-  const session = await createStripeSession(products, coupon, user._id);
-
-  if (totalAmount >= 20000) {
-    await createCoupon(user._id);
-  }
-  res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
+  res.status(200).json({
+    id: session.id,
+    totalAmount: session.amount_total / 100,
+    redirect_url: session.url,
+  });
 };
 
 export const checkoutSuccess = async (req, res) => {
@@ -61,6 +50,13 @@ export const checkoutSuccess = async (req, res) => {
         isActive: false,
       }
     );
+  }
+
+  const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+  if (existingOrder) {
+    return res.status(200).json({
+      success: true,
+    });
   }
 
   // create a new Order

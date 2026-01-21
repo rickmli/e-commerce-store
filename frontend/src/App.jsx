@@ -14,6 +14,8 @@ import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
 import CartPage from "./pages/CartPage";
 import { useCartStore } from "./stores/useCartStore";
+import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
+import PurchaseCancelPage from "./pages/PurchaseCancelPage";
 
 function App() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -58,6 +60,14 @@ function App() {
         <Route
           path="/admin-dashboard"
           element={isAdmin ? <AdminPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/purchase-success"
+          element={user ? <PurchaseSuccessPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/purchase-cancel"
+          element={user ? <PurchaseCancelPage /> : <Navigate to="/login" />}
         />
         <Route path="/*" element={<NotFoundPage />} />
       </Route>

@@ -1,4 +1,6 @@
+import { createRewardCoupon } from "../controllers/couponController.js";
 import { stripe } from "../libs/stripe.js";
+import Coupon from "../models/Coupon.js";
 import { serviceErrorHandler } from "../utils/handler.js";
 
 export const _createStripeCoupon = async (discountPercentage) => {
@@ -10,10 +12,9 @@ export const _createStripeCoupon = async (discountPercentage) => {
   return coupon.id;
 };
 
-export const _createStripeSession = async (products, coupon, userId) => {
+export const _createStripeSession = async (products, couponCode, userId) => {
   const lineItems = products.map((product) => {
     const amount = Math.round(product.price * 100); // stripe wants u to send in the format of cents
-    totalAmount += amount * product.quantity;
 
     return {
       price_data: {
@@ -28,6 +29,20 @@ export const _createStripeSession = async (products, coupon, userId) => {
     };
   });
 
+  let coupon = null;
+  if (couponCode) {
+    coupon = await Coupon.findOne({
+      code: couponCode,
+      userId: userId,
+      isActive: true,
+    });
+    if (!coupon) {
+      const error = new Error("Coupon not found");
+      error.status = 404;
+      throw error;
+    }
+  }
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: lineItems,
@@ -37,13 +52,13 @@ export const _createStripeSession = async (products, coupon, userId) => {
     discounts: coupon
       ? [
           {
-            coupon: await createStripeCoupon(coupon.discountPercentage),
+            coupon: await _createStripeCoupon(coupon.discountPercentage),
           },
         ]
       : [],
     metadata: {
       userId: userId.toString(),
-      couponCode: coupon.code || "",
+      couponCode: coupon?.code || "",
       products: JSON.stringify(
         products.map((p) => ({
           id: p._id,

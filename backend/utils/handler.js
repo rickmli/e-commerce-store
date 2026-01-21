@@ -15,6 +15,7 @@ export const serviceErrorHandler = (fn, service, operation) => {
     try {
       return await fn(...args);
     } catch (error) {
+      console.error(error.message);
       // 如果已有自定义错误状态，保持它
       if (!error.status) {
         error.status = 500;
