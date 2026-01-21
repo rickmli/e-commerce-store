@@ -1,15 +1,11 @@
 import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { MoveRight } from "lucide-react";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "../libs/axios";
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const OrderSummary = () => {
   const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
-  const navigate = useNavigate();
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
@@ -17,7 +13,6 @@ const OrderSummary = () => {
   const formattedSavings = savings.toFixed(2);
 
   const handlePayment = async () => {
-    const stripe = await stripePromise;
     const res = await axios.post("/payments/create-checkout-session", {
       products: cart,
       couponCode: coupon ? coupon.code : null,
