@@ -129,7 +129,7 @@ axios.interceptors.response.use(
       } catch (refreshError) {
         cleanup();
         useUserStore.getState().signout();
-        window.location.href = "/login"; // 明确跳转登录页
+        window.location.href = "/signin"; // 明确跳转登录页
         return Promise.reject(refreshError);
       }
     }
