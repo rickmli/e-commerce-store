@@ -1,7 +1,7 @@
 import "./utils/dotenv.js";
 import express from "express";
 import cookieParser from "cookie-parser";
-// import path from "path";
+import path from "path";
 
 import authRoutes from "./routes/authRoute.js";
 import productRoutes from "./routes/productRoute.js";
@@ -14,7 +14,7 @@ import { connectDB } from "./libs/db.js";
 
 const app = express();
 const PORT = process.env.PORT || 5002;
-// const __dirname = path.resolve();
+const __dirname = path.resolve();
 
 app.use(express.json({ limit: "20mb" })); // allows you to parse the body of the request
 app.use(cookieParser());
@@ -31,13 +31,13 @@ app.use("/api/analytics", analyticRoutes);
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// if (process.env.NODE_ENV === "production") {
-// 	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-// 	app.get("*", (req, res) => {
-// 		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-// 	});
-// }
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
 
 const startServer = async () => {
   try {
